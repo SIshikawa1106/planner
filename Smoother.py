@@ -32,7 +32,8 @@ class Smoother:
 
     def _insert_new_path(self, original, new_path, insert_indexes):
 
-        original = np.delete(original, insert_indexes)
+        original = np.delete(original, slice(min(insert_indexes), max(insert_indexes), None), axis=0)
+        original = np.insert(original, insert_indexes[0], new_path, axis=0)
 
 class RandomCutSmoother(Smoother):
     def _optimize(self, path):
@@ -88,17 +89,29 @@ if __name__ == "__main__":
         idx =  np.random.choice(np.arange(len(path)-1), 2, replace=False)
         print(idx)
 
-    print(path)
+    #print(path)
     idx =  np.random.choice(np.arange(len(path)-1), 2, replace=False)
-    print(idx)
+    #print(idx)
 
     def delete(path, start, end):
         path = np.delete(path, [start, end], axis=0)
 
-    print(path.shape)
-    delete(path, min(idx), max(idx))
-    print(path.shape)
 
+    print("test")
+    path = np.arange(0, 20).reshape((10,2))
+    print(path)
 
+    new_path = np.full((2,2), -1, dtype=int)
+    print("new path\n", new_path)
 
+    idx = np.random.randint(0, len(path), size=2)
+    print("index :", idx)
+
+    range = [min(idx),max(idx)]
+    print("range :", np.s_[min(idx):max(idx)])
+    path = np.delete(path, np.s_[min(idx):max(idx)], axis=0)
+    print("delete\n", path)
+
+    new_path = np.insert(path, min(idx), new_path, axis=0)
+    print("insert new path\n", new_path)
 
